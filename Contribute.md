@@ -4,8 +4,8 @@ Some guidelines that we expect from our contributors are as follows:
 <!-- TOC depthFrom:2 -->
 
 - [Pull Requests](#pull-requests)
-    - [Pull Request Lifecycle](#pull-request-lifecycle)
-    - [Checklists for Contribution](#checklists-for-contribution)
+    - [Lifecycle](#lifecycle)
+    - [Guidelines for Contribution](#Guidelines-for-contribution)
         - [Pre-requisites](#Pre-requisites) 
         - [Designing a Resource & Datasource for IBM Cloud Provider](#Designing-a-Resource-&-Datasource-for-IBM-Cloud-Provider) 
         - [Implementing the Resource code for IBM Cloud Provider service](#Implementing-the-Resource-code-for-IBM-Cloud-Provider-service) 
@@ -20,7 +20,7 @@ Some guidelines that we expect from our contributors are as follows:
 ## Pull Requests
 
 Below are some guidelines to follow before Raising a PR. 
-### Pull Request Lifecycle
+### Lifecycle
 1. Fork the repository, add your code changes. You can raise a PR for review and comments.
 2. One team member from terraform-provider-ibm will take a look at the PR, will either approve it  or give comments if anything more needed to be done. 
 3. Once all the comments and checklists are done, your contributions will be merged into the codebase. Contributions that are merged will be included into the next release of the provider.
@@ -36,7 +36,7 @@ Before raising a PR for a new resource on the IBM Cloud Provider, please ensure 
 - [ ]  All the Resources & Data sources have the required [Documentation](#Updating-Documentation), with examples
 - [ ]  All the Resources & Data sources are included in a [sample terraform configuration](#Adding-examples)] & published in the /examples folder
 
-### Checklists for Contribution
+### Guidelines for Contribution
 
 If you are contributing for a new terraform resource or a datasource ensure that you fulfil all checklist items-
 #### Pre-requisites
