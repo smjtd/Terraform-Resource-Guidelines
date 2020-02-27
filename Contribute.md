@@ -29,7 +29,7 @@ Checklist
 Before raising a PR for a new resource on the IBM Cloud Provider, please ensure the following:
 
 - [ ]  Did you follow all the guidance, while  [designing a Resource & Datasource for IBM Cloud Provider](#Designing-a-Resource-&-Datasource-for-IBM-Cloud-Provider) ?
-- [ ]  Did you follow all the guidance, while implementing the resource & data sources ?
+- [ ]  Did you follow all the guidance, while [implementing the resource & data sources](#Implementing-the-Resource-code-for-IBM-Cloud-Provider-service) ?
 - [ ]  All the Resources & Data sources have Unit-test. See [Writing Acceptance
    Tests](#Writing-acceptance-tests) below for a detailed guide on how to
    approach these.
