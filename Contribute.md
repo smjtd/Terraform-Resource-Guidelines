@@ -6,6 +6,14 @@ Some guidelines that we expect from our contributors are as follows:
 - [Pull Requests](#pull-requests)
     - [Pull Request Lifecycle](#pull-request-lifecycle)
     - [Checklists for Contribution](#checklists-for-contribution)
+	    -[Pre-requisites](#Pre-requisites) 
+	    -[Designing a Resource & Datasource for IBM Cloud Provider](#Designing-a-Resource-&-Datasource-for-IBM-Cloud-Provider) 
+	    -[Implementing the Resource code for IBM Cloud Provider service](#Implementing-the-Resource-code-for-IBM-Cloud-Provider-service) 
+	    -[Implementing the Resource code for IBM Cloud Provider service](#Implementing-the-Resource-code-for-IBM-Cloud-Provider-service) 
+	    -[Writing Acceptance Tests](#Writing-acceptance-tests)
+	    -[Updating Documentation](#Updating-Documentation)
+	    -[Adding examples](#Adding-Examples)
+
 
 
 
@@ -25,9 +33,9 @@ Before raising a PR for a new resource on the IBM Cloud Provider, please ensure 
 - [ ]  Did you follow all the guidance, while  [designing a Resource & Datasource for IBM Cloud Provider](#Designing-a-Resource-&-Datasource-for-IBM-Cloud-Provider) ?
 - [ ]  Did you follow all the guidance, while implementing the resource & data sources ?
 - [ ]  All the Resources & Data sources have Unit-test. See [Writing Acceptance
-   Tests](#writing-acceptance-tests) below for a detailed guide on how to
+   Tests](#Writing-acceptance-tests) below for a detailed guide on how to
    approach these.
-- [ ]  All the Resources & Data sources have the required Documentation, with examples
+- [ ]  All the Resources & Data sources have the required [Documentation](#Updating-Documentation), with examples
 - [ ]  All the Resources & Data sources are included in a sample terraform configuration & published in the /examples folder
 
 ### Checklists for Contribution
@@ -269,3 +277,115 @@ return resourceGroup.ID == resourceGroupID, nil
 }
 ```
 put error handling and proper status messages wherever required.
+
+- In **Provider.go** add the entry to the resource name and map it to the respective function (follow naming standards) Eg.
+```go
+    ResourcesMap: map[string]*schema.Resource{
+        "ibm_resource_group": resourceIBMResourceGroup(),
+    }
+```
+
+
+#### Writting Writing Acceptance Tests
+- Write Basic unit test configuration covering cases for all scenarios and follow these guidelines for writing acceptance tests .
+1. Unit test for each resource should go to separate file inside ibm/ directory named similar to the actual resource file followed by _test. Eg. resource_file_name_test.go
+2. Use **CheckDestroy** function- CheckDestroy typically named testAccCheckIBMResourceABCDestroy is called after all test steps have been run and Terraform has run `destroy` on the remaining state. This allows developers to ensure any resource created is truly destroyed. This method receives the last known Terraform state as input, and commonly uses infrastructure SDKs to query APIs directly to verify the expected objects are no longer found, and should return an error if any resources remain. 
+4. Use **testAccPreCheck** function - **PreCheck** if non-nil, will be called before any test steps are executed. It is commonly used to verify that required values exist for testing, such as environment variables containing test keys that are used to configure the Provider or Resource under test.
+5. Use **fmt.Sprintf()** for defining testcase scenarios in hcl format.
+6. Use randomised naming for creating new resources that should generate a unique nave every time you run the test case.
+eg, **resource_ibm_resource_group_test.go**
+
+```go
+//Configuration for testing a scenario
+func TestAccIBMResourceGroup_Basic(t *testing.T) {
+	var conf models.ResourceGroupv2
+	resourceGroupName := fmt.Sprintf("terraform_%d", acctest.RandInt())
+	resourceGroupUpdateName := fmt.Sprintf("terraform_%d", acctest.RandInt())
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:  func() { testAccPreCheck(t) },
+		Providers: testAccProviders,
+		Steps: []resource.TestStep{
+			resource.TestStep{
+				Config: testAccCheckIBMResourceGroup_basic(resourceGroupName),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckIBMResourceGroupExists("ibm_resource_group.resourceGroup", &conf),
+					resource.TestCheckResourceAttr("ibm_resource_group.resourceGroup", "name", resourceGroupName),
+					resource.TestCheckResourceAttr("ibm_resource_group.resourceGroup", "default", "false"),
+					resource.TestCheckResourceAttr("ibm_resource_group.resourceGroup", "state", "ACTIVE"),
+				),
+            },
+            resource.TestStep{
+				ResourceName:      "ibm_resource_group.resourceGroup",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+//check exist function
+func testAccCheckIBMResourceGroupExists(n string, obj *models.ResourceGroupv2) resource.TestCheckFunc {
+
+	return func(s *terraform.State) error {
+		rs, ok := s.RootModule().Resources[n]
+		if !ok {
+			return fmt.Errorf("Not found: %s", n)
+		}
+
+		rsContClient, err := testAccProvider.Meta().(ClientSession).ResourceManagementAPIv2()
+		if err != nil {
+			return err
+		}
+		resourceGroupID := rs.Primary.ID
+
+		resourceGroup, err := rsContClient.ResourceGroup().Get(resourceGroupID)
+		if err != nil {
+			return err
+		}
+
+		obj = resourceGroup
+		return nil
+	}
+}
+
+//checkDestroy function
+func testAccCheckIBMResourceGroupDestroy(s *terraform.State) error {
+	rsContClient, err := testAccProvider.Meta().(ClientSession).ResourceManagementAPIv2()
+	if err != nil {
+		return err
+	}
+
+	for _, rs := range s.RootModule().Resources {
+		if rs.Type != "ibm_resource_group" {
+			continue
+		}
+
+		resourceGroupID := rs.Primary.ID
+
+		// Try to find the key
+		_, err := rsContClient.ResourceGroup().Get(resourceGroupID)
+
+		if err != nil && !strings.Contains(err.Error(), "404") {
+			return fmt.Errorf("Error waiting for resource group (%s) to be destroyed: %s", rs.Primary.ID, err)
+		}
+	}
+
+	return nil
+}
+
+//test case scenario
+func testAccCheckIBMResourceGroup_basic(resourceGroupName string) string {
+	return fmt.Sprintf(`
+		  
+		  resource "ibm_resource_group" "resourceGroup" {
+			name     = "%s"
+		  }
+	
+```
+
+Finally to run the test files use make test
+
+#### Updating Documentation
+- Documentation for each resource goes into separate .html.markdown file under website directory. put the files inside d for datasource or r for resource.
+- Describe the functionality of the resource along with all the supported arguments and attributes exported.
+- Add a small example in the example section of the documentation file. 
