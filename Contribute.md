@@ -34,7 +34,7 @@ Before raising a PR for a new resource on the IBM Cloud Provider, please ensure 
    Tests](#Writing-acceptance-tests) below for a detailed guide on how to
    approach these.
 - [ ]  All the Resources & Data sources have the required [Documentation](#Updating-Documentation), with examples
-- [ ]  All the Resources & Data sources are included in a sample terraform configuration & published in the /examples folder
+- [ ]  All the Resources & Data sources are included in a [sample terraform configuration](#Adding-examples)] & published in the /examples folder
 
 ### Checklists for Contribution
 
@@ -384,6 +384,10 @@ func testAccCheckIBMResourceGroup_basic(resourceGroupName string) string {
 Finally to run the test files use make test
 
 #### Updating Documentation
-- Documentation for each resource goes into separate .html.markdown file under website directory. put the files inside d for datasource or r for resource.
+- Documentation for each resource goes into separate .html.markdown file under website directory. put the files inside directories /d for datasource or /r for resource.
 - Describe the functionality of the resource along with all the supported arguments and attributes exported.
 - Add a small example in the example section of the documentation file. 
+
+#### Adding examples
+- Add an example .tf configuration for any use case for the service in the /examples folder.
+- Use proper standards, define variables inside variable.tf, initialise the provider in provider.tf and write the configurtation in main.tf
