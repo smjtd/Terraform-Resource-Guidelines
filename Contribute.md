@@ -34,7 +34,7 @@ Before raising a PR for a new resource on the IBM Cloud Provider, please ensure 
    Tests](#Writing-acceptance-tests) below for a detailed guide on how to
    approach these.
 - [ ]  All the Resources & Data sources have the required [Documentation](#Updating-Documentation), with examples
-- [ ]  All the Resources & Data sources are included in a [sample terraform configuration](#Adding-examples)] & published in the /examples folder
+- [ ]  All the Resources & Data sources are included in a [sample terraform configuration](#Adding-examples) & published in the /examples folder
 
 ### Guidelines for Contribution
 
