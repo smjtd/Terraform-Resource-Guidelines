@@ -9,7 +9,6 @@ Some guidelines that we expect from our contributors are as follows:
         - [Pre-requisites](#Pre-requisites) 
         - [Designing a Resource & Datasource for IBM Cloud Provider](#Designing-a-Resource-&-Datasource-for-IBM-Cloud-Provider) 
         - [Implementing the Resource code for IBM Cloud Provider service](#Implementing-the-Resource-code-for-IBM-Cloud-Provider-service) 
-        - [Implementing the Resource code for IBM Cloud Provider service](#Implementing-the-Resource-code-for-IBM-Cloud-Provider-service) 
         - [Writing Acceptance Tests](#Writing-acceptance-tests)
         - [Updating Documentation](#Updating-Documentation)
         - [Adding examples](#Adding-Examples)
