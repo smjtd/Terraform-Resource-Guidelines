@@ -390,4 +390,4 @@ Finally to run the test files use make test
 
 #### Adding examples
 - Add an example .tf configuration for any use case for the service in the /examples folder.
-- Use proper standards, define variables inside variable.tf, initialise the provider in provider.tf and write the configurtation in main.tf
+- Use proper standards, define variables inside variable.tf, initialise the provider in provider.tf and write the configuration in main.tf
